@@ -4,6 +4,7 @@ const DATA_FILES = {
   physicalEducation: "data/physical-education.json"
 };
 const USERNAME_STORAGE_KEY = "aitu-schedule-username";
+const DATA_REFRESH_INTERVAL = 30_000;
 
 const scheduleBody = document.querySelector("#schedule-body");
 const usernameSelect = document.querySelector("#username-select");
@@ -14,7 +15,11 @@ let data;
 let localStorageAvailable = true;
 
 async function loadData() {
-  const responses = await Promise.all(Object.values(DATA_FILES).map((file) => fetch(file)));
+  // Метка времени и no-store исключают выдачу старого JSON из кеша браузера/CDN.
+  const cacheBuster = Date.now();
+  const responses = await Promise.all(
+    Object.values(DATA_FILES).map((file) => fetch(`${file}?v=${cacheBuster}`, { cache: "no-store" }))
+  );
   if (responses.some((response) => !response.ok)) {
     throw new Error("Не удалось загрузить один из файлов расписания.");
   }
@@ -200,16 +205,23 @@ function renderSchedule() {
   applyMobileDay(mobileView.day);
 }
 
-function populateUsers() {
-  const users = new Set(["@yamenai"]);
+function populateUsers(preferredUsername = getSavedUsername()) {
+  const users = new Set();
   getUsers(data.language).forEach((user) => users.add(user.Username));
   getUsers(data.physicalEducation).forEach((user) => users.add(user.Username));
   const usernames = [...users].sort();
   usernameSelect.replaceChildren(...usernames.map((username) => new Option(username, username)));
 
-  const savedUsername = getSavedUsername();
-  usernameSelect.value = usernames.includes(savedUsername) ? savedUsername : usernames[0];
+  usernameSelect.value = usernames.includes(preferredUsername) ? preferredUsername : usernames[0];
   saveSelectedUsername();
+}
+
+async function refreshScheduleData() {
+  const preferredUsername = data ? usernameSelect.value : getSavedUsername();
+  const loadedData = await loadData();
+  data = loadedData;
+  populateUsers(preferredUsername);
+  renderSchedule();
 }
 
 function saveAndRenderSchedule() {
@@ -222,17 +234,16 @@ usernameSelect.addEventListener("input", saveAndRenderSchedule);
 usernameSelect.addEventListener("change", saveAndRenderSchedule);
 window.addEventListener("pagehide", saveSelectedUsername);
 
-// Обновляет подсветку текущего занятия и переключает день после окончания пар.
+// Обновляет время, а также подхватывает новые usernames и занятия из JSON.
 window.setInterval(() => {
-  if (data) renderSchedule();
-}, 60_000);
+  refreshScheduleData().catch((error) => console.warn("Не удалось обновить расписание:", error));
+}, DATA_REFRESH_INTERVAL);
 
-loadData()
-  .then((loadedData) => {
-    data = loadedData;
-    populateUsers();
-    renderSchedule();
-  })
+window.addEventListener("focus", () => {
+  if (data) refreshScheduleData().catch((error) => console.warn("Не удалось обновить расписание:", error));
+});
+
+refreshScheduleData()
   .catch((error) => {
     scheduleInfo.textContent = error.message;
     console.error(error);
