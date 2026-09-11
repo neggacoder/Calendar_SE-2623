@@ -69,7 +69,7 @@ function getUserLessons(username) {
       day: physicalUser.day,
       subject: "Физическая культура: " + physicalUser.Type,
       start: physicalUser.time,
-      end: physicalUser.end ?? physicalUser.time + 1,
+      end: physicalUser.time + 2,
       room: physicalUser.room || ""
     });
   }

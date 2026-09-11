@@ -4,20 +4,23 @@
       "Username": "@yamenai",
       "Type": "Настольный теннис",
       "day": "Пятница",
-      "time": 16
+      "time": 16,
+      "end": 18
     },
     {
       "Username": "@verslx",
-      "Type":"Фитнес",
+      "Type": "Фитнес",
       "day": "Четверг",
-      "time": 4
+      "time": 16,
+      "end": 18
     },
 
     {
       "Username": "@d30mant",
       "Type": "Бадминтон",
       "day": "Понедельник",
-      "time": 14
+      "time": 14,
+      "end": 16
     },
 
     {

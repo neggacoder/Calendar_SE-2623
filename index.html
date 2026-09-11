@@ -8,7 +8,21 @@
   </head>
   <body>
     <main>
-      <h1>Расписание занятий</h1>
+      <header class="page-header">
+        <h1>Расписание занятий</h1>
+        <nav class="mobile-day-switcher" aria-label="Выбор дня расписания">
+          <button id="previous-day" type="button" aria-label="Предыдущий день">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <strong id="mobile-day-label"></strong>
+          <button id="next-day" type="button" aria-label="Следующий день">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
+          <button id="automatic-day" type="button" aria-label="Вернуться к автоматическому выбору дня">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0 2 5.3M20 4v7h-7" /></svg>
+          </button>
+        </nav>
+      </header>
 
       <section class="user-picker" aria-label="Выбор расписания">
         <label for="username-select">Студент</label>
@@ -19,12 +33,6 @@
       </section>
 
       <p id="schedule-info" role="status"></p>
-      <nav class="mobile-day-switcher" aria-label="Выбор дня расписания">
-        <button id="previous-day" type="button" aria-label="Предыдущий день">←</button>
-        <strong id="mobile-day-label"></strong>
-        <button id="next-day" type="button" aria-label="Следующий день">→</button>
-        <button id="automatic-day" type="button">Авто</button>
-      </nav>
       <div class="table-wrap">
         <table id="schedule-table">
           <caption>Общее и персональное расписание</caption>
