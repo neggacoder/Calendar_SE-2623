@@ -8,6 +8,12 @@ python3 -m http.server 8000
 
 После этого откройте `http://localhost:8000` в браузере. Сервер нужен потому, что браузер не разрешает загружать JSON через `fetch` при прямом открытии `index.html`.
 
+## Публикация на GitHub Pages
+
+Файл `.github/workflows/deploy-pages.yml` автоматически публикует сайт после каждого `push` в ветку `main`.
+
+Перед первым деплоем в репозитории GitHub откройте **Settings → Pages** и выберите **Source: GitHub Actions**. После следующего push адрес сайта появится в разделе **Actions** у завершённого запуска и в **Settings → Pages**.
+
 ## Данные
 
 - `data/base-schedule.json` — общее расписание для всей группы.
