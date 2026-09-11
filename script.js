@@ -8,6 +8,7 @@ const DATA_REFRESH_INTERVAL = 30_000;
 
 const scheduleBody = document.querySelector("#schedule-body");
 const usernameSelect = document.querySelector("#username-select");
+const userSearch = document.querySelector("#user-search");
 const showButton = document.querySelector("#show-schedule");
 const scheduleInfo = document.querySelector("#schedule-info");
 const lessonTemplate = document.querySelector("#lesson-template");
@@ -40,13 +41,43 @@ async function loadData() {
   return { base, language, physicalEducation };
 }
 
-function makeLesson(lesson, state = "future") {
+function formatRemainingTime(totalMinutes) {
+  const minutes = Math.max(0, Math.ceil(totalMinutes));
+  if (minutes < 60) return `${minutes} мин`;
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return rest ? `${hours} ч ${rest} мин` : `${hours} ч`;
+}
+
+function getLessonCountdown(lesson, state, now) {
+  if (state === "current") {
+    const endsAt = new Date(now);
+    // Каждый час пары заканчивается в :50, а перерыв начинается после него.
+    endsAt.setHours(0, lesson.end * 60 - 10, 0, 0);
+    return `До конца: ${formatRemainingTime((endsAt - now) / 60000)}`;
+  }
+  if (state === "future" && lesson.day === data.base.days[getTodayDayIndex(now)]) {
+    const startsAt = new Date(now);
+    startsAt.setHours(lesson.start, 0, 0, 0);
+    if (startsAt > now) return `Через: ${formatRemainingTime((startsAt - now) / 60000)}`;
+  }
+  return "";
+}
+
+function makeLesson(lesson, state = "future", now = new Date()) {
   const fragment = lessonTemplate.content.cloneNode(true);
   const card = fragment.querySelector(".lesson");
   card.classList.add(`is-${state}`);
   const title = card.querySelector(".lesson-title");
   title.textContent = lesson.subject;
   card.querySelector(".lesson-details").textContent = [lesson.room, lesson.extra].filter(Boolean).join(" · ");
+  const countdown = getLessonCountdown(lesson, state, now);
+  if (countdown) {
+    const countdownElement = document.createElement("span");
+    countdownElement.className = "lesson-countdown";
+    countdownElement.textContent = countdown;
+    card.append(countdownElement);
+  }
 
   if (lesson.kind === "language") {
     card.classList.add("has-language-group");
@@ -322,7 +353,7 @@ function renderSchedule() {
       cell.dataset.day = day;
       const lessons = lessonsByPosition.get(`${day}-${hour}`) || [];
       lessons.forEach((lesson) => {
-        cell.append(makeLesson(lesson, getLessonState(lesson, now, mobileView)));
+        cell.append(makeLesson(lesson, getLessonState(lesson, now, mobileView), now));
       });
       const longestLesson = Math.max(1, ...lessons.map((lesson) => lesson.end - lesson.start));
       if (longestLesson > 1) {
@@ -348,11 +379,17 @@ function populateUsers(preferredUsername = getSavedUsername()) {
   const users = new Set();
   getUsers(data.language).forEach((user) => users.add(user.Username));
   getUsers(data.physicalEducation).forEach((user) => users.add(user.Username));
-  const usernames = [...users].sort();
+  const allUsernames = [...users].sort();
+  const query = userSearch.value.trim().toLocaleLowerCase("ru-RU");
+  const usernames = query
+    ? allUsernames.filter((username) => username.toLocaleLowerCase("ru-RU").includes(query))
+    : allUsernames;
   usernameSelect.replaceChildren(...usernames.map((username) => new Option(username, username)));
 
-  usernameSelect.value = usernames.includes(preferredUsername) ? preferredUsername : usernames[0];
-  saveSelectedUsername();
+  if (usernames.length) {
+    usernameSelect.value = usernames.includes(preferredUsername) ? preferredUsername : usernames[0];
+    saveSelectedUsername();
+  }
 }
 
 async function refreshScheduleData() {
@@ -371,6 +408,11 @@ function saveAndRenderSchedule() {
 showButton.addEventListener("click", saveAndRenderSchedule);
 usernameSelect.addEventListener("input", saveAndRenderSchedule);
 usernameSelect.addEventListener("change", saveAndRenderSchedule);
+userSearch.addEventListener("input", () => {
+  const currentUsername = usernameSelect.value;
+  populateUsers(currentUsername);
+  if (usernameSelect.value) renderSchedule();
+});
 window.addEventListener("pagehide", saveSelectedUsername);
 previousDayButton.addEventListener("click", () => changeMobileDay(-1));
 nextDayButton.addEventListener("click", () => changeMobileDay(1));

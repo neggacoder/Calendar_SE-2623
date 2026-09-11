@@ -119,6 +119,24 @@ select {
   outline: none;
 }
 
+#user-search {
+  width: min(240px, 28vw);
+  min-height: 40px;
+  padding: 0 12px;
+  color: var(--aitu-navy);
+  font: inherit;
+  font-weight: 600;
+  background: #151d28;
+  border: 1px solid #3a4c60;
+  border-radius: 9px;
+  outline: none;
+}
+
+#user-search:focus-visible {
+  border-color: var(--aitu-cyan);
+  box-shadow: 0 0 0 4px rgb(0 185 228 / 21%);
+}
+
 select:focus-visible {
   border-color: var(--aitu-cyan);
   box-shadow: 0 0 0 4px rgb(0 185 228 / 21%);
@@ -307,6 +325,15 @@ th:not(:first-child),
   font-weight: 600;
   line-height: 1.35;
 }
+
+.lesson-countdown {
+  color: var(--aitu-cyan);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.lesson.is-current .lesson-countdown { color: #e8fbff; }
 
 .lesson + .lesson {
   margin-top: 8px;
@@ -508,7 +535,7 @@ th:not(:first-child),
   h1 { gap: 10px; padding: 0 14px; }
   h1::before { width: 46px; height: 46px; font-size: 11px; border-radius: 12px 2px 12px 2px; }
   .user-picker { align-items: stretch; flex-direction: column; }
-  select, button { width: 100%; }
+  select, button, #user-search { width: 100%; }
   .table-wrap { border-radius: 12px; }
   table { min-width: 100%; }
   .mobile-hidden { display: none; }
