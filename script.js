@@ -11,6 +11,7 @@ const showButton = document.querySelector("#show-schedule");
 const scheduleInfo = document.querySelector("#schedule-info");
 const lessonTemplate = document.querySelector("#lesson-template");
 let data;
+let localStorageAvailable = true;
 
 async function loadData() {
   const responses = await Promise.all(Object.values(DATA_FILES).map((file) => fetch(file)));
@@ -128,6 +129,7 @@ function getSavedUsername() {
   try {
     return window.localStorage.getItem(USERNAME_STORAGE_KEY);
   } catch {
+    localStorageAvailable = false;
     return null;
   }
 }
@@ -135,8 +137,12 @@ function getSavedUsername() {
 function saveSelectedUsername() {
   try {
     window.localStorage.setItem(USERNAME_STORAGE_KEY, usernameSelect.value);
+    localStorageAvailable = window.localStorage.getItem(USERNAME_STORAGE_KEY) === usernameSelect.value;
+    return localStorageAvailable;
   } catch {
     // Расписание остаётся доступным, даже если браузер запретил localStorage.
+    localStorageAvailable = false;
+    return false;
   }
 }
 
@@ -189,7 +195,8 @@ function renderSchedule() {
   const userScheduleText = hasPersonalSchedule
     ? `Базовое и персональное расписание для ${username}.`
     : `Для ${username} персональных занятий пока нет — показано базовое расписание.`;
-  scheduleInfo.textContent = `${mobileView.label}: ${mobileView.day}. ${userScheduleText}`;
+  const storageWarning = localStorageAvailable ? "" : " Браузер запретил сохранение выбора.";
+  scheduleInfo.textContent = `${mobileView.label}: ${mobileView.day}. ${userScheduleText}${storageWarning}`;
   applyMobileDay(mobileView.day);
 }
 
@@ -202,13 +209,18 @@ function populateUsers() {
 
   const savedUsername = getSavedUsername();
   usernameSelect.value = usernames.includes(savedUsername) ? savedUsername : usernames[0];
+  saveSelectedUsername();
 }
 
-showButton.addEventListener("click", renderSchedule);
-usernameSelect.addEventListener("change", () => {
+function saveAndRenderSchedule() {
   saveSelectedUsername();
   renderSchedule();
-});
+}
+
+showButton.addEventListener("click", saveAndRenderSchedule);
+usernameSelect.addEventListener("input", saveAndRenderSchedule);
+usernameSelect.addEventListener("change", saveAndRenderSchedule);
+window.addEventListener("pagehide", saveSelectedUsername);
 
 // Обновляет подсветку текущего занятия и переключает день после окончания пар.
 window.setInterval(() => {
