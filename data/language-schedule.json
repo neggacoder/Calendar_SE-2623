@@ -4,8 +4,18 @@
       "Username": "@yamenai",
       "language": "Иностранный язык B1",
       "lections": [
-        { "day": "Вторник", "cab": "C1.2.101", "GroupId": "FL51-EN-P51", "time": 15, "end": 16 },
-        { "day": "Пятница", "cab": "C1.2.101", "GroupId": "FL51-EN-P51", "time": 15, "end": 16 }
+        { "day": "Вторник", "cab": "C1.2.101", "time": 15, "end": 16 },
+        { "day": "Пятница", "cab": "C1.2.101", "time": 15, "end": 16 }
+      ]
+    },
+    {
+      "Username": "@verslx",
+      "language": "Иностранный язык B2",
+      "lections": [
+        { "day": "Вторник", "cab": "C1.1.365", "time": 8, "end": 10 },
+        { "day": "Пятница", "cab": "C1.1.365", "time": 8, "end": 9 },
+        { "day": "Суббота", "cab": "Онлайн", "time": 18, "end": 20 }
+
       ]
     },
     {
