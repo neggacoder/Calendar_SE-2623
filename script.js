@@ -15,6 +15,11 @@ const previousDayButton = document.querySelector("#previous-day");
 const nextDayButton = document.querySelector("#next-day");
 const automaticDayButton = document.querySelector("#automatic-day");
 const mobileDayLabel = document.querySelector("#mobile-day-label");
+const groupDialog = document.querySelector("#group-dialog");
+const closeGroupDialogButton = document.querySelector("#close-group-dialog");
+const groupDialogTitle = document.querySelector("#group-dialog-title");
+const groupDialogTags = document.querySelector("#group-dialog-tags");
+const groupMembers = document.querySelector("#group-members");
 let data;
 let localStorageAvailable = true;
 let manuallySelectedDay = null;
@@ -32,11 +37,26 @@ async function loadData() {
   return { base, language, physicalEducation };
 }
 
-function makeLesson(subject, room, extra = "", state = "future") {
+function makeLesson(lesson, state = "future") {
   const fragment = lessonTemplate.content.cloneNode(true);
-  fragment.querySelector(".lesson").classList.add(`is-${state}`);
-  fragment.querySelector(".lesson-title").textContent = subject;
-  fragment.querySelector(".lesson-details").textContent = [room, extra].filter(Boolean).join(" · ");
+  const card = fragment.querySelector(".lesson");
+  card.classList.add(`is-${state}`);
+  card.querySelector(".lesson-title").textContent = lesson.subject;
+  card.querySelector(".lesson-details").textContent = [lesson.room, lesson.extra].filter(Boolean).join(" · ");
+
+  if (lesson.kind === "language") {
+    card.classList.add("is-clickable");
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Показать группу: ${lesson.subject}`);
+    card.addEventListener("click", () => openLanguageGroup(lesson));
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openLanguageGroup(lesson);
+      }
+    });
+  }
   return fragment;
 }
 
@@ -60,7 +80,16 @@ function getUserLessons(username) {
         start: lesson.time,
         end: lesson.end ?? lesson.time + 1,
         room: lesson.cab,
-        extra: lesson.GroupId
+        extra: lesson.GroupId,
+        kind: "language",
+        languageTags: {
+          day: lesson.day,
+          time: lesson.time,
+          end: lesson.end ?? lesson.time + 1,
+          cab: lesson.cab || "",
+          groupId: lesson.GroupId || "",
+          language: languageUser.language
+        }
       });
     });
   }
@@ -74,6 +103,48 @@ function getUserLessons(username) {
     });
   }
   return lessons;
+}
+
+function normalizeTag(value) {
+  return String(value ?? "").trim().toLocaleLowerCase("ru-RU");
+}
+
+function isSameLanguageGroup(target, user, lesson) {
+  const targetTags = target.languageTags;
+  const candidateEnd = lesson.end ?? lesson.time + 1;
+  const samePlaceAndTime =
+    normalizeTag(lesson.day) === normalizeTag(targetTags.day) &&
+    normalizeTag(lesson.time) === normalizeTag(targetTags.time) &&
+    normalizeTag(candidateEnd) === normalizeTag(targetTags.end) &&
+    normalizeTag(lesson.cab) === normalizeTag(targetTags.cab);
+
+  if (!samePlaceAndTime) return false;
+  if (targetTags.groupId || lesson.GroupId) {
+    return normalizeTag(lesson.GroupId) === normalizeTag(targetTags.groupId);
+  }
+  return normalizeTag(user.language) === normalizeTag(targetTags.language);
+}
+
+function openLanguageGroup(target) {
+  const members = new Set();
+  getUsers(data.language).forEach((user) => {
+    (user.lections || []).forEach((lesson) => {
+      if (isSameLanguageGroup(target, user, lesson)) members.add(user.Username);
+    });
+  });
+
+  groupDialogTitle.textContent = target.subject;
+  groupDialogTags.textContent = `${target.languageTags.day} · ${target.languageTags.time}:00–${target.languageTags.end}:00 · ${target.languageTags.cab || "Кабинет не указан"}`;
+  groupMembers.replaceChildren(
+    ...[...members].sort().map((username) => {
+      const item = document.createElement("li");
+      item.textContent = username;
+      return item;
+    })
+  );
+
+  if (typeof groupDialog.showModal === "function") groupDialog.showModal();
+  else groupDialog.setAttribute("open", "");
 }
 
 function getTodayDayIndex(now) {
@@ -217,7 +288,7 @@ function renderSchedule() {
       cell.dataset.day = day;
       const lessons = lessonsByPosition.get(`${day}-${hour}`) || [];
       lessons.forEach((lesson) => {
-        cell.append(makeLesson(lesson.subject, lesson.room, lesson.extra, getLessonState(lesson, now, mobileView)));
+        cell.append(makeLesson(lesson, getLessonState(lesson, now, mobileView)));
       });
       const longestLesson = Math.max(1, ...lessons.map((lesson) => lesson.end - lesson.start));
       if (longestLesson > 1) {
@@ -272,6 +343,10 @@ nextDayButton.addEventListener("click", () => changeMobileDay(1));
 automaticDayButton.addEventListener("click", () => {
   manuallySelectedDay = null;
   renderSchedule();
+});
+closeGroupDialogButton.addEventListener("click", () => groupDialog.close());
+groupDialog.addEventListener("click", (event) => {
+  if (event.target === groupDialog) groupDialog.close();
 });
 
 // Обновляет время, а также подхватывает новые usernames и занятия из JSON.

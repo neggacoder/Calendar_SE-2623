@@ -280,6 +280,22 @@ th:not(:first-child),
   border-top: 1px solid #b8e3ef;
 }
 
+.lesson.is-clickable {
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.lesson.is-clickable:hover {
+  border-color: var(--aitu-cyan);
+  box-shadow: 0 9px 18px rgb(0 132 193 / 16%);
+  transform: translateY(-1px);
+}
+
+.lesson.is-clickable:focus-visible {
+  outline: 3px solid rgb(0 185 228 / 42%);
+  outline-offset: 2px;
+}
+
 .lesson.is-past {
   opacity: 0.43;
   filter: grayscale(0.35);
@@ -307,6 +323,92 @@ th:not(:first-child),
   letter-spacing: 0.08em;
   background: #c9f7ff;
   border-radius: 4px;
+}
+
+#group-dialog {
+  width: min(420px, calc(100vw - 32px));
+  padding: 0;
+  color: var(--ink);
+  background: #fff;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgb(6 43 85 / 28%);
+}
+
+#group-dialog::backdrop { background: rgb(6 43 85 / 56%); }
+
+.group-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 22px 14px;
+  background: linear-gradient(135deg, #e2f8fd, #f8fcff);
+}
+
+.dialog-kicker {
+  margin: 0 0 4px;
+  color: var(--aitu-blue);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.group-dialog-header h2 {
+  margin: 0;
+  color: var(--aitu-navy);
+  font-size: 20px;
+}
+
+#close-group-dialog {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  place-items: center;
+  background: #fff;
+  border: 1px solid #b7d5e7;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+#close-group-dialog svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--aitu-blue);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.group-dialog-tags {
+  margin: 0;
+  padding: 14px 22px;
+  color: var(--muted-ink);
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+}
+
+.group-members {
+  display: grid;
+  gap: 8px;
+  max-height: 300px;
+  margin: 0;
+  padding: 16px 22px 22px;
+  overflow: auto;
+  list-style: none;
+}
+
+.group-members li {
+  padding: 10px 12px;
+  color: var(--aitu-navy);
+  font-weight: 700;
+  background: var(--aitu-sky);
+  border-left: 3px solid var(--aitu-cyan);
+  border-radius: 7px;
 }
 
 @media (max-width: 720px) {

@@ -11,6 +11,17 @@
       ]
     },
     {
+      "Username": "@I1ndraI",
+      "language": "Иностранный язык 1 (B2)",
+      "lections": [
+        { "day": "Вторник", "cab": "C1.1.365", "time": 8, "end": 10 },
+        { "day": "Пятница", "cab": "C1.1.365", "time": 14, "end": 16 },
+        { "day": "Суббота", "cab": "Онлайн", "time": 18, "end": 20 }
+
+      ]
+    },
+
+    {
       "Username": "@verslx",
       "language": "Иностранный язык B2",
       "lections": [

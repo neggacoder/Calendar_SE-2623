@@ -59,6 +59,20 @@
       </article>
     </template>
 
+    <dialog id="group-dialog" aria-labelledby="group-dialog-title">
+      <header class="group-dialog-header">
+        <div>
+          <p class="dialog-kicker">Твоя группа</p>
+          <h2 id="group-dialog-title"></h2>
+        </div>
+        <button id="close-group-dialog" type="button" aria-label="Закрыть окно">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+      </header>
+      <p id="group-dialog-tags" class="group-dialog-tags"></p>
+      <ul id="group-members" class="group-members"></ul>
+    </dialog>
+
     <script src="script.js"></script>
   </body>
 </html>
