@@ -1,11 +1,18 @@
 {
   "users": [
     {
-      "Username": "@kumenai",
+      "Username": "@yamenai",
       "Type": "Настольный теннис",
       "day": "Суббота",
       "time": 15
     },
+    {
+      "Username": "@d30mant",
+      "Type": "Бадминтон",
+      "day": "Понедельник",
+      "time": 14
+    },
+
     {
       "Username": "@xdjoklo",
       "Type": "ЛФК",
