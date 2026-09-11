@@ -152,7 +152,14 @@ function openLanguageGroup(target) {
   groupMembers.replaceChildren(
     ...[...members].sort().map((username) => {
       const item = document.createElement("li");
-      item.textContent = username;
+      const link = document.createElement("a");
+      const telegramUsername = username.replace(/^@/, "");
+      link.href = `https://t.me/${encodeURIComponent(telegramUsername)}`;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = username;
+      link.setAttribute("aria-label", `Открыть Telegram: ${username}`);
+      item.append(link);
       return item;
     })
   );

@@ -444,12 +444,28 @@ th:not(:first-child),
 }
 
 .group-members li {
-  padding: 10px 12px;
-  color: var(--aitu-navy);
-  font-weight: 700;
+  padding: 0;
   background: var(--aitu-sky);
   border-left: 3px solid var(--aitu-cyan);
   border-radius: 7px;
+}
+
+.group-members a {
+  display: block;
+  padding: 10px 12px;
+  color: var(--aitu-navy);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.group-members a:hover {
+  color: var(--aitu-cyan);
+  text-decoration: underline;
+}
+
+.group-members a:focus-visible {
+  outline: 3px solid rgb(66 215 255 / 42%);
+  outline-offset: -3px;
 }
 
 @media (max-width: 720px) {
