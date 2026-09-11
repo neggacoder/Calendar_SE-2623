@@ -41,23 +41,37 @@ function makeLesson(lesson, state = "future") {
   const fragment = lessonTemplate.content.cloneNode(true);
   const card = fragment.querySelector(".lesson");
   card.classList.add(`is-${state}`);
-  card.querySelector(".lesson-title").textContent = lesson.subject;
+  const title = card.querySelector(".lesson-title");
+  title.textContent = lesson.subject;
   card.querySelector(".lesson-details").textContent = [lesson.room, lesson.extra].filter(Boolean).join(" · ");
 
   if (lesson.kind === "language") {
-    card.classList.add("is-clickable");
-    card.tabIndex = 0;
-    card.setAttribute("role", "button");
-    card.setAttribute("aria-label", `Показать группу: ${lesson.subject}`);
-    card.addEventListener("click", () => openLanguageGroup(lesson));
-    card.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        openLanguageGroup(lesson);
-      }
-    });
+    card.classList.add("has-language-group");
+    const groupButton = document.createElement("button");
+    groupButton.type = "button";
+    groupButton.className = "lesson-title lesson-group-trigger";
+    groupButton.setAttribute("aria-label", `Показать группу: ${lesson.subject}`);
+    groupButton.append(document.createTextNode(lesson.subject));
+    groupButton.append(createGroupIcon());
+    groupButton.addEventListener("click", () => openLanguageGroup(lesson));
+    title.replaceWith(groupButton);
+
+    const hint = document.createElement("span");
+    hint.className = "lesson-group-hint";
+    hint.textContent = "Посмотреть группу";
+    card.append(hint);
   }
   return fragment;
+}
+
+function createGroupIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", "M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20m13-9a4 4 0 1 0 0-8m2 11.3a4 4 0 0 1 3 3.7V20M11.5 6.5a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z");
+  svg.append(path);
+  return svg;
 }
 
 // Поддерживаются и текущий формат { users: [...] }, и один объект пользователя.

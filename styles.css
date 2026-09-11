@@ -280,20 +280,59 @@ th:not(:first-child),
   border-top: 1px solid #b8e3ef;
 }
 
-.lesson.is-clickable {
-  cursor: pointer;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+.lesson.has-language-group { border-color: #8bd8eb; }
+
+.lesson-group-trigger {
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--aitu-navy);
+  line-height: 1.25;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.lesson.is-clickable:hover {
-  border-color: var(--aitu-cyan);
-  box-shadow: 0 9px 18px rgb(0 132 193 / 16%);
-  transform: translateY(-1px);
+.lesson-group-trigger:hover {
+  color: var(--aitu-blue);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
 }
 
-.lesson.is-clickable:focus-visible {
+.lesson-group-trigger:focus-visible {
   outline: 3px solid rgb(0 185 228 / 42%);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+.lesson-group-trigger svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.lesson-group-hint {
+  width: max-content;
+  padding: 3px 6px;
+  color: var(--aitu-blue);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  background: #fff;
+  border: 1px solid #b8e3ef;
+  border-radius: 4px;
 }
 
 .lesson.is-past {
