@@ -159,6 +159,10 @@ button:focus-visible {
 
 .mobile-day-switcher { display: none; }
 
+@media (min-width: 721px) {
+  .mobile-day-switcher { display: none !important; }
+}
+
 .table-wrap {
   overflow: auto;
   background: var(--card);
