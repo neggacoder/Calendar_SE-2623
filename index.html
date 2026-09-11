@@ -33,8 +33,9 @@
       </section>
 
       <p id="schedule-info" role="status"></p>
-      <div class="table-wrap">
-        <table id="schedule-table">
+      <div class="schedule-layout">
+        <div class="table-wrap">
+          <table id="schedule-table">
           <caption>Общее и персональное расписание</caption>
           <thead>
             <tr>
@@ -46,9 +47,19 @@
               <th scope="col" data-day="Пятница">Пятница</th>
               <th scope="col" data-day="Суббота">Суббота</th>
             </tr>
-          </thead>
-          <tbody id="schedule-body"></tbody>
-        </table>
+            </thead>
+            <tbody id="schedule-body"></tbody>
+          </table>
+        </div>
+        <nav class="desktop-day-switcher" aria-label="Выбор дня расписания">
+          <button type="button" data-all-days>Вся неделя</button>
+          <button type="button" data-desktop-day="Понедельник">Пн</button>
+          <button type="button" data-desktop-day="Вторник">Вт</button>
+          <button type="button" data-desktop-day="Среда">Ср</button>
+          <button type="button" data-desktop-day="Четверг">Чт</button>
+          <button type="button" data-desktop-day="Пятница">Пт</button>
+          <button type="button" data-desktop-day="Суббота">Сб</button>
+        </nav>
       </div>
     </main>
 

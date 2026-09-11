@@ -20,6 +20,9 @@ const closeGroupDialogButton = document.querySelector("#close-group-dialog");
 const groupDialogTitle = document.querySelector("#group-dialog-title");
 const groupDialogTags = document.querySelector("#group-dialog-tags");
 const groupMembers = document.querySelector("#group-members");
+const scheduleTable = document.querySelector("#schedule-table");
+const desktopDayButtons = document.querySelectorAll("[data-desktop-day]");
+const allDaysButton = document.querySelector("[data-all-days]");
 let data;
 let localStorageAvailable = true;
 let manuallySelectedDay = null;
@@ -221,11 +224,21 @@ function getLessonState(lesson, now, view) {
   return "future";
 }
 
-function applyMobileDay(day) {
-  document.querySelectorAll("[data-day]").forEach((element) => {
-    element.classList.toggle("mobile-hidden", element.dataset.day !== day);
+function applyDayVisibility(day) {
+  const isMobile = window.matchMedia("(max-width: 720px)").matches;
+  document.querySelectorAll("thead [data-day], tbody [data-day]").forEach((element) => {
+    element.classList.toggle("mobile-hidden", isMobile && element.dataset.day !== day);
+    element.classList.toggle("desktop-hidden", !isMobile && manuallySelectedDay && element.dataset.day !== day);
   });
+  scheduleTable.classList.toggle("is-single-day", !isMobile && Boolean(manuallySelectedDay));
   mobileDayLabel.textContent = day;
+  desktopDayButtons.forEach((button) => {
+    const active = button.dataset.desktopDay === manuallySelectedDay;
+    button.classList.toggle("is-selected", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  allDaysButton.classList.toggle("is-selected", !manuallySelectedDay);
+  allDaysButton.setAttribute("aria-pressed", String(!manuallySelectedDay));
 }
 
 function getDisplayedMobileView(allLessons, now) {
@@ -328,7 +341,7 @@ function renderSchedule() {
     : `Для ${username} персональных занятий пока нет — показано базовое расписание.`;
   const storageWarning = localStorageAvailable ? "" : " Браузер запретил сохранение выбора.";
   scheduleInfo.textContent = `${mobileView.label}: ${mobileView.day}. ${userScheduleText}${storageWarning}`;
-  applyMobileDay(mobileView.day);
+  applyDayVisibility(mobileView.day);
 }
 
 function populateUsers(preferredUsername = getSavedUsername()) {
@@ -368,6 +381,16 @@ automaticDayButton.addEventListener("click", () => {
 closeGroupDialogButton.addEventListener("click", () => groupDialog.close());
 groupDialog.addEventListener("click", (event) => {
   if (event.target === groupDialog) groupDialog.close();
+});
+desktopDayButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    manuallySelectedDay = button.dataset.desktopDay;
+    renderSchedule();
+  });
+});
+allDaysButton.addEventListener("click", () => {
+  manuallySelectedDay = null;
+  renderSchedule();
 });
 
 // Обновляет время, а также подхватывает новые usernames и занятия из JSON.
