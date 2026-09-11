@@ -3,6 +3,7 @@ const DATA_FILES = {
   language: "data/language-schedule.json",
   physicalEducation: "data/physical-education.json"
 };
+const USERNAME_STORAGE_KEY = "aitu-schedule-username";
 
 const scheduleBody = document.querySelector("#schedule-body");
 const usernameSelect = document.querySelector("#username-select");
@@ -123,6 +124,22 @@ function applyMobileDay(day) {
   });
 }
 
+function getSavedUsername() {
+  try {
+    return window.localStorage.getItem(USERNAME_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function saveSelectedUsername() {
+  try {
+    window.localStorage.setItem(USERNAME_STORAGE_KEY, usernameSelect.value);
+  } catch {
+    // Расписание остаётся доступным, даже если браузер запретил localStorage.
+  }
+}
+
 function renderSchedule() {
   const username = usernameSelect.value;
   const { base } = data;
@@ -180,12 +197,18 @@ function populateUsers() {
   const users = new Set(["@yamenai"]);
   getUsers(data.language).forEach((user) => users.add(user.Username));
   getUsers(data.physicalEducation).forEach((user) => users.add(user.Username));
-  usernameSelect.replaceChildren(...[...users].sort().map((username) => new Option(username, username)));
-  usernameSelect.value = "@yamenai";
+  const usernames = [...users].sort();
+  usernameSelect.replaceChildren(...usernames.map((username) => new Option(username, username)));
+
+  const savedUsername = getSavedUsername();
+  usernameSelect.value = usernames.includes(savedUsername) ? savedUsername : usernames[0];
 }
 
 showButton.addEventListener("click", renderSchedule);
-usernameSelect.addEventListener("change", renderSchedule);
+usernameSelect.addEventListener("change", () => {
+  saveSelectedUsername();
+  renderSchedule();
+});
 
 // Обновляет подсветку текущего занятия и переключает день после окончания пар.
 window.setInterval(() => {
