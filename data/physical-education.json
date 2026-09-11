@@ -1,0 +1,87 @@
+{
+  "users": [
+    {
+      "Username": "@kumenai",
+      "Type": "Настольный теннис",
+      "day": "Суббота",
+      "time": 15
+    },
+    {
+      "Username": "@xdjoklo",
+      "Type": "ЛФК",
+      "day": "Суббота",
+      "time": 16,
+      "end": 18
+    },
+    {
+      "Username": "@rimdayoo",
+      "Type": "Атлетика",
+      "day": "Пятница",
+      "time": 16,
+      "end": 18,
+      "room": "Спортзал"
+    },
+    {
+      "Username": "@kindest244",
+      "Type": "Физическая культура",
+      "day": "Вторник",
+      "time": 14,
+      "end": 16,
+      "room": "Спортзал"
+    },
+    {
+      "Username": "@Toma1207",
+      "Type": "Настольный теннис",
+      "day": "Пятница",
+      "time": 16,
+      "end": 18,
+      "room": "Спортзал"
+    },
+    {
+      "Username": "@erkinadilzhan",
+      "Type": "Физическая культура",
+      "day": "Четверг",
+      "time": 14,
+      "end": 16,
+      "room": "Спортзал"
+    },
+    {
+      "Username": "@isehrl",
+      "Type": "Физическая культура",
+      "day": "Пятница",
+      "time": 16,
+      "end": 17,
+      "room": "Спортзал"
+    },
+    {
+      "Username": "@pozharnayachast",
+      "Type": "Настольный теннис",
+      "day": "Пятница",
+      "time": 16,
+      "end": 18,
+      "room": "Спортзал"
+    },
+    {
+      "Username": "@marxx_x",
+      "Type": "Фитнес",
+      "day": "Четверг",
+      "time": 16,
+      "end": 18
+    },
+    {
+      "Username": "@Tairanka",
+      "Type": "Легкая атлетика",
+      "day": "Понедельник",
+      "time": 14,
+      "end": 16,
+      "room": "Спортзал"
+    },
+    {
+      "Username": "@alikh1110jdk",
+      "Type": "Армрестлинг",
+      "day": "Понедельник",
+      "time": 14,
+      "end": 16
+    }
+  ]
+}

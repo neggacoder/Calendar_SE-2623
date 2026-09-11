@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Расписание</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Расписание занятий</h1>
+
+      <section class="user-picker" aria-label="Выбор расписания">
+        <label for="username-select">Студент</label>
+        <select id="username-select" name="username">
+          <option value="@kumenai">@kumenai</option>
+        </select>
+        <button id="show-schedule" type="button">Показать расписание</button>
+      </section>
+
+      <p id="schedule-info" role="status"></p>
+      <div class="table-wrap">
+        <table id="schedule-table">
+          <caption>Общее и персональное расписание</caption>
+          <thead>
+            <tr>
+              <th scope="col">Время</th>
+              <th scope="col" data-day="Понедельник">Понедельник</th>
+              <th scope="col" data-day="Вторник">Вторник</th>
+              <th scope="col" data-day="Среда">Среда</th>
+              <th scope="col" data-day="Четверг">Четверг</th>
+              <th scope="col" data-day="Пятница">Пятница</th>
+              <th scope="col" data-day="Суббота">Суббота</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <template id="lesson-template">
+      <article class="lesson">
+        <strong class="lesson-title"></strong>
+        <span class="lesson-details"></span>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
