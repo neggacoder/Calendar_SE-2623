@@ -11,8 +11,13 @@ const usernameSelect = document.querySelector("#username-select");
 const showButton = document.querySelector("#show-schedule");
 const scheduleInfo = document.querySelector("#schedule-info");
 const lessonTemplate = document.querySelector("#lesson-template");
+const previousDayButton = document.querySelector("#previous-day");
+const nextDayButton = document.querySelector("#next-day");
+const automaticDayButton = document.querySelector("#automatic-day");
+const mobileDayLabel = document.querySelector("#mobile-day-label");
 let data;
 let localStorageAvailable = true;
+let manuallySelectedDay = null;
 
 async function loadData() {
   // Метка времени и no-store исключают выдачу старого JSON из кеша браузера/CDN.
@@ -128,6 +133,31 @@ function applyMobileDay(day) {
   document.querySelectorAll("[data-day]").forEach((element) => {
     element.classList.toggle("mobile-hidden", element.dataset.day !== day);
   });
+  mobileDayLabel.textContent = day;
+}
+
+function getDisplayedMobileView(allLessons, now) {
+  const automaticView = getMobileView(allLessons, now);
+  if (!manuallySelectedDay) return automaticView;
+
+  const todayIndex = getTodayDayIndex(now);
+  const todayName = data.base.days[todayIndex];
+  return {
+    day: manuallySelectedDay,
+    label: "Просмотр",
+    isToday: manuallySelectedDay === todayName
+  };
+}
+
+function changeMobileDay(direction) {
+  if (!data) return;
+
+  const allLessons = [...data.base.lessons, ...getUserLessons(usernameSelect.value)];
+  const currentDay = manuallySelectedDay || getMobileView(allLessons, new Date()).day;
+  const currentIndex = data.base.days.indexOf(currentDay);
+  const nextIndex = (currentIndex + direction + data.base.days.length) % data.base.days.length;
+  manuallySelectedDay = data.base.days[nextIndex];
+  renderSchedule();
 }
 
 function getSavedUsername() {
@@ -156,7 +186,7 @@ function renderSchedule() {
   const { base } = data;
   const allLessons = [...base.lessons, ...getUserLessons(username)];
   const now = new Date();
-  const mobileView = getMobileView(allLessons, now);
+  const mobileView = getDisplayedMobileView(allLessons, now);
   const lessonsByPosition = new Map();
   const coveredPositions = new Set();
   allLessons.forEach((lesson) => {
@@ -237,6 +267,12 @@ showButton.addEventListener("click", saveAndRenderSchedule);
 usernameSelect.addEventListener("input", saveAndRenderSchedule);
 usernameSelect.addEventListener("change", saveAndRenderSchedule);
 window.addEventListener("pagehide", saveSelectedUsername);
+previousDayButton.addEventListener("click", () => changeMobileDay(-1));
+nextDayButton.addEventListener("click", () => changeMobileDay(1));
+automaticDayButton.addEventListener("click", () => {
+  manuallySelectedDay = null;
+  renderSchedule();
+});
 
 // Обновляет время, а также подхватывает новые usernames и занятия из JSON.
 window.setInterval(() => {

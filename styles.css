@@ -154,6 +154,8 @@ button:focus-visible {
   border-radius: 0 9px 9px 0;
 }
 
+.mobile-day-switcher { display: none; }
+
 .table-wrap {
   overflow: auto;
   background: var(--card);
@@ -316,6 +318,36 @@ th:not(:first-child),
   .table-wrap { border-radius: 12px; }
   table { min-width: 100%; }
   .mobile-hidden { display: none; }
+  .mobile-day-switcher {
+    display: grid;
+    grid-template-columns: 42px 1fr 42px auto;
+    gap: 7px;
+    align-items: center;
+    margin: 0 0 12px;
+  }
+  .mobile-day-switcher strong {
+    padding: 0 4px;
+    color: var(--aitu-navy);
+    font-size: 14px;
+    text-align: center;
+  }
+  .mobile-day-switcher button {
+    width: auto;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+  #previous-day,
+  #next-day {
+    font-size: 19px;
+    line-height: 1;
+  }
+  #automatic-day {
+    color: var(--aitu-blue);
+    background: #fff;
+    border: 1px solid #aac9df;
+    box-shadow: none;
+  }
   caption { padding: 14px; font-size: 12px; }
   thead th { padding: 13px 7px; font-size: 12px; }
   th, td { padding: 6px; }
