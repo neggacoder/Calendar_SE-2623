@@ -177,11 +177,11 @@ function renderSchedule() {
 }
 
 function populateUsers() {
-  const users = new Set(["@kumenai"]);
+  const users = new Set(["@yamenai"]);
   getUsers(data.language).forEach((user) => users.add(user.Username));
   getUsers(data.physicalEducation).forEach((user) => users.add(user.Username));
   usernameSelect.replaceChildren(...[...users].sort().map((username) => new Option(username, username)));
-  usernameSelect.value = "@kumenai";
+  usernameSelect.value = "@yamenai";
 }
 
 showButton.addEventListener("click", renderSchedule);
