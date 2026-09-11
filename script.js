@@ -190,7 +190,11 @@ function renderSchedule() {
         cell.append(makeLesson(lesson.subject, lesson.room, lesson.extra, getLessonState(lesson, now, mobileView)));
       });
       const longestLesson = Math.max(1, ...lessons.map((lesson) => lesson.end - lesson.start));
-      if (longestLesson > 1) cell.rowSpan = longestLesson;
+      if (longestLesson > 1) {
+        cell.rowSpan = longestLesson;
+        cell.classList.add("is-multi-slot");
+        cell.style.setProperty("--lesson-slots", longestLesson);
+      }
       row.append(cell);
     });
     scheduleBody.append(row);

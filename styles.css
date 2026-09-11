@@ -231,6 +231,15 @@ th:not(:first-child),
 
 .schedule-cell:hover { background: #f0fbfe; }
 
+.schedule-cell.is-multi-slot {
+  --multi-slot-card-height: calc(var(--lesson-slots) * var(--lesson-min-height) - 18px);
+}
+
+.schedule-cell.is-multi-slot .lesson:only-child {
+  min-height: var(--multi-slot-card-height);
+  align-content: start;
+}
+
 .lesson {
   display: grid;
   gap: 5px;
