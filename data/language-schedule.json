@@ -10,6 +10,16 @@
 
       ]
     },
+      {
+      "Username": "@hamadaasahilover",
+      "language": "Немецкий a1.1",
+      "lections": [
+        { "day": "Вторник", "cab": "C1.3.321", "time": 16, "end": 18 },
+        { "day": "Среда", "cab": "C1.3.321", "time": 15, "end": 16 },
+        { "day": "Суббота", "cab": "Онлайн", "time": 18, "end": 20 }
+
+      ]
+    },
     {
       "Username": "@I1ndraI",
       "language": "Иностранный язык 1 (B2)",
