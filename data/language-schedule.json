@@ -108,7 +108,7 @@
       "Username": "@pozharnayachast",
       "language": "Китайский (A1)",
       "lections": [
-        { "day": "Понедельник", "cab": "C1.3.318", "time": 16, "end": 17 },
+        { "day": "Понедельник", "cab": "C1.3.318", "time": 16, "end": 18},
         { "day": "Четверг", "cab": "C1.3.318", "time": 16, "end": 17 },
         { "day": "Суббота", "cab": "Онлайн", "time": 18, "end": 20 }
       ]
